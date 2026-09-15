@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ashwin R Nair — Digital Design &amp; VLSI</title>
+<meta name="description" content="M.Tech (Microelectronics &amp; VLSI) at IIT Kanpur. RTL design, verification, standard-cell and physical design, compact modelling.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f6f7f9;
+    --bg-card: #ffffff;
+    --fg: #16181d;
+    --fg-muted: #5b6270;
+    --fg-faint: #858d9b;
+    --line: #e3e6ea;
+    --accent: #1f5fd0;
+    --accent-soft: #eaf0fd;
+    --chip-bg: #f1f3f6;
+    --shadow: 0 1px 2px rgba(16,20,28,.05), 0 6px 18px rgba(16,20,28,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1116;
+      --bg-soft: #131820;
+      --bg-card: #141a22;
+      --fg: #e7ebf1;
+      --fg-muted: #9aa4b2;
+      --fg-faint: #717c8c;
+      --line: #232c38;
+      --accent: #7aa7ff;
+      --accent-soft: #17233a;
+      --chip-bg: #1a222c;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1116;
+    --bg-soft: #131820;
+    --bg-card: #141a22;
+    --fg: #e7ebf1;
+    --fg-muted: #9aa4b2;
+    --fg-faint: #717c8c;
+    --line: #232c38;
+    --accent: #7aa7ff;
+    --accent-soft: #17233a;
+    --chip-bg: #1a222c;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; gap: 4px; height: 52px; overflow-x: auto; scrollbar-width: none; }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-inner a {
+    color: var(--fg-muted); font-size: 13.5px; padding: 6px 10px; border-radius: 7px; white-space: nowrap;
+  }
+  .nav-inner a:hover { color: var(--fg); background: var(--chip-bg); text-decoration: none; }
+  .nav-name { font-weight: 650; color: var(--fg) !important; margin-right: 8px; }
+  .theme-btn {
+    margin-left: auto; flex: none; background: none; border: 1px solid var(--line); color: var(--fg-muted);
+    width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .theme-btn svg { width: 15px; height: 15px; fill: currentColor; }
+  .theme-btn:hover { color: var(--fg); background: var(--chip-bg); }
+
+  /* ---------- header ---------- */
+  header { padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
+  h1 { font-size: clamp(28px, 6vw, 40px); line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .role { font-size: 17px; color: var(--fg); margin: 0 0 4px; font-weight: 550; }
+  .sub { color: var(--fg-muted); margin: 0 0 20px; font-size: 15px; }
+  .lede { color: var(--fg-muted); max-width: 62ch; margin: 0 0 22px; }
+  .lede strong { color: var(--fg); font-weight: 600; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .links a {
+    display: inline-flex; align-items: center; gap: 7px;
+    border: 1px solid var(--line); background: var(--bg-card); box-shadow: var(--shadow);
+    padding: 7px 13px; border-radius: 999px; font-size: 14px; color: var(--fg);
+  }
+  .links a:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+  .links svg { width: 15px; height: 15px; fill: currentColor; opacity: .85; }
+
+  /* ---------- sections ---------- */
+  section { padding: 40px 0 8px; }
+  h2 {
+    font-size: 12.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-faint);
+    margin: 0 0 20px; font-weight: 650;
+  }
+  h2 .count { color: var(--fg-faint); font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+  .card {
+    border: 1px solid var(--line); background: var(--bg-card); border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 14px; box-shadow: var(--shadow);
+  }
+  .card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+  .card h3 { font-size: 16.5px; margin: 0; letter-spacing: -0.01em; font-weight: 640; }
+  .tag {
+    font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 5px;
+  }
+  .tag.plain { color: var(--fg-faint); background: var(--chip-bg); }
+  .meta { font-size: 13px; color: var(--fg-faint); margin: 4px 0 12px; }
+  .meta span + span::before { content: " · "; }
+  .card ul { margin: 0; padding-left: 18px; }
+  .card li { margin-bottom: 7px; color: var(--fg-muted); font-size: 14.6px; }
+  .card li:last-child { margin-bottom: 0; }
+  .card li strong { color: var(--fg); font-weight: 600; }
+  .stack { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .stack span {
+    font-size: 12px; background: var(--chip-bg); color: var(--fg-muted);
+    padding: 3px 9px; border-radius: 6px;
+  }
+  .repo { font-size: 13px; }
+  .repo a { display: inline-flex; align-items: center; gap: 6px; }
+  .repo svg { width: 14px; height: 14px; fill: currentColor; }
+
+  details.card { padding: 0; }
+  details.card > summary {
+    list-style: none; cursor: pointer; padding: 16px 20px; display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 15.5px;
+  }
+  details.card > summary::-webkit-details-marker { display: none; }
+  details.card > summary::after {
+    content: "＋"; margin-left: auto; color: var(--fg-faint); font-weight: 400; font-size: 15px;
+  }
+  details.card[open] > summary::after { content: "－"; }
+  details.card > summary:hover { color: var(--accent); }
+  .details-body { padding: 0 20px 18px; border-top: 1px solid var(--line); margin-top: -2px; padding-top: 16px; }
+  .sub-item { margin-bottom: 20px; }
+  .sub-item:last-child { margin-bottom: 0; }
+  .sub-item h4 { margin: 0 0 3px; font-size: 14.8px; font-weight: 640; }
+
+  /* ---------- skills ---------- */
+  .skillrow { display: grid; grid-template-columns: 130px 1fr; gap: 10px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .skillrow:last-child { border-bottom: none; }
+  .skillrow dt { font-size: 13px; color: var(--fg-faint); font-weight: 600; padding-top: 3px; }
+  .skillrow dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .skillrow dd span {
+    font-size: 13px; background: var(--chip-bg); color: var(--fg); padding: 3px 10px; border-radius: 6px;
+  }
+
+  /* ---------- education / lists ---------- */
+  table.edu { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  table.edu td { padding: 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.edu tr:last-child td { border-bottom: none; }
+  table.edu td:first-child { color: var(--fg-faint); font-size: 13px; white-space: nowrap; padding-right: 16px; width: 1%; }
+  table.edu td:last-child { text-align: right; color: var(--fg-muted); white-space: nowrap; padding-left: 12px; }
+  .edu-deg { font-weight: 600; }
+  .edu-inst { color: var(--fg-muted); font-size: 13.5px; }
+
+  ul.plainlist { list-style: none; margin: 0; padding: 0; }
+  ul.plainlist li {
+    padding: 11px 0; border-bottom: 1px solid var(--line); color: var(--fg-muted); font-size: 14.6px;
+  }
+  ul.plainlist li:last-child { border-bottom: none; }
+  ul.plainlist li strong { color: var(--fg); font-weight: 600; }
+
+  .courses { display: flex; flex-wrap: wrap; gap: 7px; }
+  .courses span {
+    font-size: 13px; border: 1px solid var(--line); color: var(--fg-muted);
+    padding: 4px 10px; border-radius: 7px;
+  }
+  .courses span b { color: var(--fg); font-weight: 600; }
+
+  footer {
+    margin-top: 48px; border-top: 1px solid var(--line); padding: 24px 0 40px;
+    color: var(--fg-faint); font-size: 13.5px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between;
+  }
+
+  @media (max-width: 560px) {
+    header { padding: 36px 0 30px; }
+    .skillrow { grid-template-columns: 1fr; gap: 6px; }
+    table.edu td:last-child { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a href="#top" class="nav-name">Ashwin R Nair</a>
+    <a href="#digital">Digital Design</a>
+    <a href="#thesis">Thesis</a>
+    <a href="#analog">Analog &amp; Devices</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle colour theme" title="Toggle theme">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 1.5V14.5a6.5 6.5 0 0 1 0-13z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <h1>Ashwin R Nair</h1>
+    <p class="role">Digital Design &amp; VLSI — RTL, Verification, Physical Design</p>
+    <p class="sub">M.Tech, Microelectronics &amp; VLSI · Indian Institute of Technology Kanpur</p>
+    <p class="lede">
+      I build and verify digital hardware — <strong>RTL and FSM control logic, clock-domain crossing,
+      standard-cell design through DRC/LVS-clean layout</strong> — and back it with a device-level
+      understanding of what the silicon underneath is actually doing. My thesis applies deep learning
+      to GaN HEMT compact-model parameter extraction.
+    </p>
+    <div class="links">
+      <a href="https://github.com/Ash173">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        Ash173
+      </a>
+      <a href="https://www.linkedin.com/in/ashwin-r-nair">
+        <svg viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+        LinkedIn
+      </a>
+      <a href="mailto:ashwinnair25@iitk.ac.in">
+        <svg viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.708 2.825L15 11.105V5.383zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741zM1 11.105l4.708-2.897L1 5.383v5.722z"/></svg>
+        ashwinnair25@iitk.ac.in
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ======================= DIGITAL DESIGN ======================= -->
+  <section id="digital">
+    <h2>Digital Design, RTL &amp; Verification</h2>
+
+    <article class="card">
+      <div class="card-head">
+        <h3>CORDIC Engine — Rotation &amp; Vectoring Modes</h3>
+        <span class="tag">Self Project</span>
+      </div>
+      <div class="meta"><span>Verilog HDL</span><span>Icarus Verilog</span></div>
+      <ul>
+        <li>Implemented the CORDIC algorithm in both <strong>rotation and vectoring modes</strong>, covering sine/cosine generation and magnitude/phase extraction.</li>
+        <li>Built <strong>iterative and pipelined architectures</strong> of the same datapath to trade latency against throughput and area, and verified both against reference fixed-point models.</li>
+      </ul>
+      <div class="stack"><span>Verilog</span><span>Fixed-point arithmetic</span><span>Pipelining</span><span>Testbench verification</span></div>
+      <p class="repo" style="margin:12px 0 0">
+        <a href="https://github.com/Ash173/CORDIC-Verilog-Implementation">
+          <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          Ash173/CORDIC-Verilog-Implementation
+        </a>
+      </p>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h3>Asynchronous FIFO with Gray-Code CDC Synchronisation</h3>
+        <span class="tag">Self Project</span>
+      </div>
+      <div class="meta"><span>Verilog HDL</span><span>Icarus Verilog</span></div>
+      <ul>
+        <li>Designed an <strong>asynchronous FIFO</strong> for safe data transfer between independent read and write clock domains.</li>
+        <li>Used <strong>Gray-code pointer encoding with two-flop synchronisers</strong> so that only one bit changes per pointer increment, making full/empty flag generation metastability-safe across the crossing.</li>
+      </ul>
+      <div class="stack"><span>Verilog</span><span>CDC</span><span>Gray code</span><span>Metastability</span><span>Synchronisers</span></div>
+      <p class="repo" style="margin:12px 0 0">
+        <a href="https://github.com/Ash173/FIFO_Design">
+          <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          Ash173/FIFO_Design
+        </a>
+      </p>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h3>Digital Backend Start-Up Sequence Controller</h3>
+        <span class="tag plain">EE619 · IIT Kanpur</span>
+      </div>
+      <div class="meta"><span>Mentors: Dr. Avinash Lahgere, Dr. Chithra</span><span>Icarus Verilog</span></div>
+      <ul>
+        <li>Co-designed a Verilog RTL backend controller implementing a <strong>7-state FSM</strong> to sequence chip start-up: serial gain-configuration capture, staged reset release for VCO/amplifier blocks, and a ready handshake.</li>
+        <li>Implemented the serial-to-parallel gain-extraction shift register and a <strong>2-flop synchroniser</strong> to safely cross data between asynchronous system and serial clock domains; verified functionality against testbench vectors.</li>
+      </ul>
+      <div class="stack"><span>Verilog RTL</span><span>FSM design</span><span>Reset sequencing</span><span>Shift registers</span><span>CDC</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h3>NOR4 / NAND4 Standard-Cell Design &amp; Layout</h3>
+        <span class="tag plain">EE619 · IIT Kanpur</span>
+      </div>
+      <div class="meta"><span>Mentors: Dr. Avinash Lahgere, Dr. Chithra</span><span>Cadence Virtuoso</span><span>gpdk180</span></div>
+      <ul>
+        <li>Sized NOR4 and NAND4 pull-up/pull-down networks using an <strong>equivalent-resistance methodology</strong> referenced to a delay-balanced inverter (W<sub>n</sub>&nbsp;=&nbsp;1&nbsp;µm, W<sub>p</sub>&nbsp;=&nbsp;2.25&nbsp;µm), completing schematic-to-layout with <strong>zero DRC/LVS violations</strong>.</li>
+        <li>Characterised pre- and post-layout propagation delay via <strong>PEX-extracted</strong> simulation across 10&nbsp;fF/50&nbsp;fF loads and 20&nbsp;ps/100&nbsp;ps input transitions, quantifying RC-parasitic delay degradation of up to <strong>55%</strong> at the tightest corner.</li>
+      </ul>
+      <div class="stack"><span>Standard cells</span><span>Layout</span><span>DRC/LVS</span><span>PEX</span><span>Timing characterisation</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h3>VLSI Testing &amp; Design for Testability</h3>
+        <span class="tag plain">Workshop · Jul 2026</span>
+      </div>
+      <div class="meta"><span>Prof. Adit D. Singh (Auburn University)</span><span>Dept. of EE, IIT Kanpur</span></div>
+      <ul>
+        <li>Five-day offline workshop on post-production digital testing fundamentals, <strong>Design for Testability (DFT)</strong> and <strong>Built-In Self-Test (BIST)</strong> methodologies.</li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- ======================= THESIS ======================= -->
+  <section id="thesis">
+    <h2>M.Tech Thesis</h2>
+    <article class="card">
+      <div class="card-head">
+        <h3>ML-Assisted Compact Modelling &amp; Parameter Extraction for ASM-HEMT</h3>
+        <span class="tag">May 2026 — Present</span>
+      </div>
+      <div class="meta"><span>Supervisor: Dr. Avinash Lahgere</span><span>EDCL, Dept. of EE, IIT Kanpur</span></div>
+      <ul>
+        <li>Developed a <strong>CNN–MOPSO hybrid framework</strong> for automated ASM-HEMT (GaN HEMT) compact-model parameter extraction from I<sub>d</sub>–V<sub>d</sub> and g<sub>m</sub> data, replacing iterative SPICE-in-the-loop optimisation with a fast surrogate-assisted pipeline.</li>
+        <li>Currently extending the pipeline to automate <strong>C–V and high-frequency S-parameter extraction</strong> for full device characterisation.</li>
+      </ul>
+      <div class="stack"><span>PyTorch</span><span>PyMoo (NSGA-II)</span><span>Scikit-Learn</span><span>HSPICE</span><span>Python</span></div>
+    </article>
+  </section>
+
+  <!-- ======================= ANALOG / RF / DEVICES ======================= -->
+  <section id="analog">
+    <h2>Analog, RF &amp; Device Engineering <span class="count">— 7 projects</span></h2>
+
+    <details class="card">
+      <summary>Analog IC Design — two OTAs in gpdk180 <span class="tag plain" style="margin-left:6px">EE610</span></summary>
+      <div class="details-body">
+        <div class="sub-item">
+          <h4>Single-Stage PMOS-Input OTA</h4>
+          <div class="meta"><span>Mentor: Dr. R.S. Ashwin Kumar</span><span>Cadence Virtuoso</span><span>gpdk180</span></div>
+          <ul>
+            <li>Designed a 6-transistor PMOS-input single-stage OTA using the <strong>g<sub>m</sub>/I<sub>D</sub> methodology</strong> with LUT-based sizing across multiple channel lengths, meeting an ICMR extending to 0&nbsp;V and an output swing of 0.8&nbsp;V on a 1.8&nbsp;V supply.</li>
+            <li>Achieved a closed-loop −3&nbsp;dB bandwidth of 3.16&nbsp;MHz against a 2&nbsp;MHz target, resolving the ICMR trade-off by intentionally biasing the NMOS load into subthreshold to keep the PMOS input pair in saturation at V<sub>ICM</sub>&nbsp;=&nbsp;0&nbsp;V.</li>
+          </ul>
+        </div>
+        <div class="sub-item">
+          <h4>Two-Stage Fully-Differential OTA with Dual CMFB</h4>
+          <div class="meta"><span>Mentor: Dr. R.S. Ashwin Kumar</span><span>Cadence Virtuoso</span><span>gpdk180</span></div>
+          <ul>
+            <li>Designed a two-stage fully-differential Miller-compensated OTA with independent CMFB loops per stage, achieving a DC loop gain of <strong>88.68&nbsp;dB</strong> and closed-loop −3&nbsp;dB bandwidth of <strong>15.8&nbsp;MHz</strong> against 60&nbsp;dB / 1&nbsp;MHz targets.</li>
+            <li>Stabilised both CMFB loops via zero-cancellation RC networks, verifying loop stability and settling through differential- and common-mode step-response simulations.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Compact Modelling — BSIM4 extraction &amp; a Verilog-A MOSFET model <span class="tag plain" style="margin-left:6px">EE681</span></summary>
+      <div class="details-body">
+        <div class="sub-item">
+          <h4>BSIM4 MOSFET Parameter Extraction against TCAD Data</h4>
+          <div class="meta"><span>Mentor: Dr. Yogesh Singh Chauhan</span><span>Keysight IC-CAP, ADS</span></div>
+          <ul>
+            <li>Extracted BSIM4.2.0 parameters (CGSO/CGDO, VTH0, U0, UA/UB, VSAT, PCLM, NFACTOR, VOFF) by fitting simulated C–V and I–V characteristics to TCAD data across C-GS/C-GD/C-GG sweeps and 11 V<sub>DS</sub>-biased I<sub>DS</sub>–V<sub>GS</sub>/I<sub>DS</sub>–V<sub>DS</sub> curves.</li>
+            <li>Debugged IC-CAP/ADS DUT and SPICE-macro incompatibilities and resolved <strong>Levenberg–Marquardt optimiser divergence</strong> by imposing parameter boundary constraints, achieving convergent fits across the full bias range.</li>
+          </ul>
+        </div>
+        <div class="sub-item">
+          <h4>Verilog-A Compact MOSFET Model with Charge, Mobility &amp; Short-Channel Effects</h4>
+          <div class="meta"><span>Mentor: Dr. Yogesh Singh Chauhan</span><span>Verilog-A, HSPICE, IC-CAP</span></div>
+          <ul>
+            <li>Developed a threshold-voltage-based NMOS/PMOS compact model in Verilog-A from first principles, implementing <strong>Ward–Dutton charge partitioning</strong>, vertical-field mobility degradation, velocity saturation, CLM, DIBL, self-heating and parasitic R<sub>D</sub>/R<sub>S</sub> effects.</li>
+            <li>Verified robustness via the <strong>Gummel symmetry test</strong>, convergence under ±100&nbsp;V extreme bias sweeps and continuity up to 4th-order derivatives; validated by simulating a CMOS inverter and 15-stage ring oscillator in HSPICE, extracting a <strong>0.12&nbsp;ns</strong> per-stage propagation delay.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Ku-Band RF Down-Converter in TSMC065 <span class="tag plain" style="margin-left:6px">EE698L</span></summary>
+      <div class="details-body">
+        <div class="meta"><span>Mentor: Dr. Nagarjuna Nallam</span><span>Cadence Virtuoso</span><span>TSMC065</span></div>
+        <ul>
+          <li>Designed and simulated a Ku-band RF down-converter in CMOS targeting 24.25–29.5&nbsp;GHz RF and 2.5–6&nbsp;GHz IF operation.</li>
+          <li>Designed an LNA–active-mixer front-end achieving <strong>13.5&nbsp;dB</strong> LNA gain and <strong>2.4&nbsp;dB</strong> mixer conversion gain, with a polyphase filter (PPF) to suppress image signals and spurious responses.</li>
+          <li>Achieved flat-gain RF-to-IF downconversion with a noise figure of <strong>5.3–6.4&nbsp;dB</strong> across the band and linear operation up to −6&nbsp;dBm input.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>1T1C DRAM Array Fabrication Process Design <span class="tag plain" style="margin-left:6px">EE618</span></summary>
+      <div class="details-body">
+        <div class="meta"><span>Mentor: Dr. Amit Verma</span><span>Dept. of EE, IIT Kanpur</span></div>
+        <ul>
+          <li>Designed and mapped the complete <strong>FEOL and BEOL flow</strong> for a 4×4 1T1C DRAM array (16 NMOS cells) on a 300&nbsp;mm wafer, from active-area definition through metal interconnect.</li>
+          <li>Detailed <strong>18 process steps</strong> including LOCOS isolation, P-well formation, gate-oxide/polysilicon patterning, LDD/source-drain implants, tungsten contact plugs and a stacked Ru/HfO/Ru capacitor per cell.</li>
+          <li>Defined <strong>7 photolithography mask layers</strong> covering active regions, gates/wordlines, contacts, the capacitor stack and bitline metallisation.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Transmission-Line Characterisation &amp; High-Speed Signal Integrity <span class="tag plain" style="margin-left:6px">EE648</span></summary>
+      <div class="details-body">
+        <div class="meta"><span>Mentor: Dr. Nagaditya Poluri</span><span>Ansys HFSS</span><span>Rogers 4350B</span></div>
+        <ul>
+          <li>Designed a 3-section Chebyshev transformer with a single-stub matching network to match a frequency-dependent complex load to 50&nbsp;Ω across 1–2&nbsp;GHz; formulated a custom <strong>ABCD-matrix cost function</strong> solved via Particle Swarm Optimisation in MATLAB.</li>
+          <li>Translated the ideal-transmission-line solution to a microstrip layout, resolved physical layout conflicts (MS TEE junction) by re-optimisation, and verified the EM-simulated design in HFSS 3D Layout — <strong>|S<sub>11</sub>| &lt; −10&nbsp;dB</strong> across the band, peaking at −18&nbsp;dB at 1.8&nbsp;GHz.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Vision-Based Path Planning &amp; Obstacle Avoidance for Drones <span class="tag plain" style="margin-left:6px">B.Tech Project</span></summary>
+      <div class="details-body">
+        <div class="meta"><span>Guide: Dr. Vijay Muralidharan</span><span>IIT Palakkad</span><span>ROS2 Humble, PX4, Gazebo</span></div>
+        <ul>
+          <li>Developed a vision-based real-time obstacle-avoidance pipeline on an Intel RealSense D415 stereo depth camera, applying spatial/temporal filtering and contour-based centroid extraction to compute obstacle-free flight paths.</li>
+          <li>Built a <strong>PX4Flow optic-flow position estimator</strong> for GPS-denied navigation, deriving the sensor's velocity kinematics with a resolved scale-factor correction and comparing low-pass vs. Kalman filtering for velocity/position smoothing.</li>
+          <li>Integrated RealSense and PX4Flow on a 3D-printed sensor platform, validated on a custom Pixhawk-controlled bicopter modelled and PID-tuned in PX4/Gazebo.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ======================= SKILLS ======================= -->
+  <section id="skills">
+    <h2>Technical Skills</h2>
+    <div class="card">
+      <dl style="margin:0">
+        <div class="skillrow">
+          <dt>HDL &amp; Design</dt>
+          <dd><span>Verilog HDL</span><span>Verilog-A</span><span>SPICE</span><span>Assembly</span></dd>
+        </div>
+        <div class="skillrow">
+          <dt>Languages</dt>
+          <dd><span>C</span><span>C++</span><span>Python</span><span>MATLAB</span><span>LaTeX</span></dd>
+        </div>
+        <div class="skillrow">
+          <dt>Digital Flow</dt>
+          <dd><span>Icarus Verilog</span><span>Yosys</span><span>Cadence Virtuoso (layout)</span><span>DRC / LVS / PEX</span></dd>
+        </div>
+        <div class="skillrow">
+          <dt>Analog &amp; Device</dt>
+          <dd><span>Cadence Spectre</span><span>Synopsys HSPICE</span><span>Keysight IC-CAP</span><span>Keysight ADS</span><span>Sentaurus TCAD</span></dd>
+        </div>
+        <div class="skillrow">
+          <dt>ML</dt>
+          <dd><span>PyTorch</span><span>Scikit-Learn</span><span>PyMoo (NSGA-II)</span></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ======================= EDUCATION ======================= -->
+  <section id="education">
+    <h2>Education</h2>
+    <div class="card">
+      <table class="edu">
+        <tr>
+          <td>2025 — Present</td>
+          <td><span class="edu-deg">M.Tech, Microelectronics &amp; VLSI</span><br><span class="edu-inst">Indian Institute of Technology, Kanpur</span></td>
+          <td>7.50 / 10</td>
+        </tr>
+        <tr>
+          <td>2021 — 2025</td>
+          <td><span class="edu-deg">B.Tech, Electrical Engineering</span><br><span class="edu-inst">Indian Institute of Technology, Palakkad</span></td>
+          <td>8.24 / 10</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td><span class="edu-deg">Class XII, CBSE</span><br><span class="edu-inst">Saraswathi Vidyanikethan Public School, Kochi</span></td>
+          <td>95.4 %</td>
+        </tr>
+        <tr>
+          <td>2018</td>
+          <td><span class="edu-deg">Class X, CBSE</span><br><span class="edu-inst">Bhavan's Adarsha Vidyalaya, Kochi</span></td>
+          <td>95.4 %</td>
+        </tr>
+      </table>
+    </div>
+
+    <h2 style="margin-top:32px">Coursework</h2>
+    <div class="card">
+      <div class="courses">
+        <span><b>EE619</b> VLSI System Design</span>
+        <span><b>EE5530</b> Principles of SoC Functional Verification*</span>
+        <span><b>EE5516</b> VLSI Architectures for DSP &amp; ML*</span>
+        <span><b>EE610</b> Analog IC Design</span>
+        <span><b>EE681</b> Compact Modeling</span>
+        <span><b>EE618</b> IC Fabrication Technology</span>
+        <span><b>EE614</b> Solid State Devices</span>
+        <span><b>EE698L</b> RFIC Design</span>
+        <span><b>EE648</b> Microwave Circuits</span>
+      </div>
+      <p class="meta" style="margin:12px 0 0">* taken during undergraduate study at IIT Palakkad</p>
+    </div>
+
+    <h2 style="margin-top:32px">Teaching &amp; Achievements</h2>
+    <div class="card">
+      <ul class="plainlist">
+        <li><strong>Teaching Assistant</strong> — EE698P, Numerical Modelling &amp; SPICE Simulation of Semiconductor Devices (Aug 2026 — Present)</li>
+        <li><strong>Teaching Assistant</strong> — ESC201, Introduction to Electronics (Aug 2025 — May 2026)</li>
+        <li><strong>A* grade</strong> in Microwave Circuits (EE648) for outstanding performance</li>
+        <li>Solved <strong>100+ Verilog problems</strong> on HDLBits</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <span>Ashwin R Nair · IIT Kanpur</span>
+    <span><a href="mailto:ashwinrnair2002@gmail.com">ashwinrnair2002@gmail.com</a> · <a href="https://github.com/Ash173">github.com/Ash173</a></span>
+  </footer>
+</main>
+
+<script>
+  (function () {
+    var btn = document.getElementById('themeBtn');
+    var root = document.documentElement;
+    var stored = null;
+    try { stored = localStorage.getItem('theme'); } catch (e) {}
+    if (stored === 'light' || stored === 'dark') root.setAttribute('data-theme', stored);
+
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      var isDark;
+      if (current === 'dark') isDark = true;
+      else if (current === 'light') isDark = false;
+      else isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
